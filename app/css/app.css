@@ -28,3 +28,55 @@
   content: "";
   padding: 0;
 }
+
+.thumb {
+  float: left;  
+  border: 1px solid #999;
+  margin: 0 15px 15px 0;
+  padding: 5px;
+  width: 300px;
+  height: 300px;
+  position: relative;
+  box-shadow: 3px 3px 7px 3px #888;
+}
+
+.thumb img {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1px;  
+  display: block;
+  min-width: 100%;
+  height: auto;
+}
+
+.thumb_caption {
+  text-align: center;
+
+}
+
+.icon_overlay {
+  width: 50px;
+  height: 50px;
+}
+
+div.zoom-icon{
+  visibility:hidden;
+  position: absolute;
+  filter:alpha(opacity=50);
+  -moz-opacity:0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+  width: 200px;
+  height: 200px;
+  left: 50px;
+  top: 50px;
+}
+
+div:hover > div.zoom-icon{
+  visibility:visible;
+}
+
+#playlist {
+  float:right;
+  width: 20%;  
+}

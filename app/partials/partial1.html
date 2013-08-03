@@ -1,1 +1,66 @@
-<p>This is the partial for view 1.</p>
+<div class='container' ng-controller='MyCtrl1'>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+ 
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <a class="brand" href="#">Musizone</a>
+ 
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+        <form class="navbar-search pull-left">
+  			<input type='text' class='search-query span3' ng-model='searchquery' id='textSearchQuery' ui-autocomplete="myOption" trigger-youtube></input>						
+				</form>      
+      </div>
+      <button class='btn' ng-click='stop()'>stop</button>
+      <button class='btn'>prev</button>        
+      <button class='btn'>next</button>
+    </div>
+  </div>
+</div>
+<div class='control-group'>
+		<input type='text' ng-model='searchquery' id='textSearchQuery' ui-autocomplete="myOption" trigger-youtube></input>		
+		<button class='btn' ng-click='stop()'>Stop</button>
+		<button class='btn' ng-click='previous()' ng-disabled='!canPrevious()'>Prev</button>
+		<button class='btn' ng-click='next()' ng-disabled='!canNext()'>Next</button>
+		<span> {{status}} {{currentSongName}} </span>
+		<div auto-check-playlist> {{playlist}} </div>			
+	</div>
+	<div class='row'>
+		<div class='span9'>
+			<div class='row'>
+		<div ng-repeat='video in videos' class='thumb span4'>
+			<img ng-src="{{video.thumbnail.hqDefault}}"/>
+			<div class="zoom-icon" ng-click='play(video)' id='{{video.id}}'>
+				<img src="img/play_overlay.png" class='icon_overlay'></div>
+			<div class='thumb_caption'>{{video.title}}</div>
+			<!-- <button class='btn' ng-click='play(video.id)'>Play</button> -->
+		</div>
+	</div>		
+	</div>
+	<div class='span2'>
+		<div class='row'>
+			<div class='span2'>
+				Play button here
+			</div>
+		</div>
+		<div class='row'>
+			<div class='span2'>
+				next button here
+			</div>
+		</div>
+		<div class='row'>
+			<div class='span2'>
+				prev button here
+			</div>
+		<div class='row'>
+			<div class='span2'>
+				<div ng-repeat='song in songs'>
+					{{song.title}}
+				</div>
+			</div>
+		</div>
+</div>
+</div>
+
