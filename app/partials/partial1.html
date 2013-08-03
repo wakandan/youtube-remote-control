@@ -57,7 +57,8 @@
 		<div class='row'>
 			<div class='span2'>
 				<div ng-repeat='song in songs'>
-					{{song.title}}
+					<img ng-src='{{song.thumbnail.small}}'>
+					<div>{{song.title}}</div>
 				</div>
 			</div>
 		</div>

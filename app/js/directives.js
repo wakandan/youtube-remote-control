@@ -50,6 +50,22 @@ directive('appVersion', ['version', function(version) {
                         if(response.playlist.length>0){
                             scope.songs = [];
                         }
+                        //check if current playlist is the same in the server
+                        //if yes, then ignore
+                        if(response.playlist.length==scope.songs.length){
+                            var allTheSame=true;
+                            for(var i=0; i<response.playlist.length; i++){                            
+                                if(response.playlist[i]!=scope.songs.id){
+                                    allTheSame = false;                            
+                                    break;
+                                }                                    
+                            }
+                            if(allTheSame){
+                                return;
+                            }
+                        }
+
+                        //get video info for those id, synchronously
                         for(var i=0; i<response.playlist.length; i++){
                             var songid = response.playlist[i];
                             $.ajax({
@@ -59,7 +75,12 @@ directive('appVersion', ['version', function(version) {
                                 success: function(response){
                                     scope.songs.push({
                                         id: songid,
-                                        title: response.entry.title.$t
+                                        title: response.entry.title.$t,
+                                        thumbnail:{
+                                            small: response.entry["media$group"]["media$thumbnail"][0].url,
+                                            mq: response.entry["media$group"]["media$thumbnail"][1].url,
+                                            hq: response.entry["media$group"]["media$thumbnail"][2].url
+                                        }
                                     });                                        
                                                                 
                                 }
