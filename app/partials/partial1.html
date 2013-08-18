@@ -1,5 +1,5 @@
 <div class='container' ng-controller='MyCtrl1'>
-<div class="navbar">
+	<div class="navbar">
   <div class="navbar-inner">
     <div class="container">
  
@@ -9,31 +9,26 @@
       <!-- Everything you want hidden at 940px or less, place within here -->
       <div class="nav-collapse collapse">
         <!-- .nav, .navbar-search, .navbar-form, etc -->
-        <form class="navbar-search pull-left">
-  			<input type='text' class='search-query span3' ng-model='searchquery' id='textSearchQuery' ui-autocomplete="myOption" trigger-youtube></input>						
+        <form class="navbar-form pull-left" ng-submit='search()'>
+  			<input type='text' placeholder='Search...' class='search-query span4' ng-model='searchquery' id='textSearchQuery' ui-autocomplete="myOption"></input>		
+  			<button type='submit' class='btn btn-primary'>Search</button>			
 				</form>      
       </div>
-      <button class='btn' ng-click='stop()'>stop</button>
-      <button class='btn'>prev</button>        
-      <button class='btn'>next</button>
     </div>
   </div>
 </div>
-<div class='control-group'>
-		<input type='text' ng-model='searchquery' id='textSearchQuery' ui-autocomplete="myOption" trigger-youtube></input>		
-		<button class='btn' ng-click='stop()'>Stop</button>
-		<button class='btn' ng-click='previous()' ng-disabled='!canPrevious()'>Prev</button>
-		<button class='btn' ng-click='next()' ng-disabled='!canNext()'>Next</button>
+<div class='control-group' >					
 		<span> {{status}} {{currentSongName}} </span>
-		<div auto-check-playlist> {{playlist}} </div>			
 	</div>
 	<div class='row'>
 		<div class='span9'>
 			<div class='row'>
 		<div ng-repeat='video in videos' class='thumb span4'>
-			<img ng-src="{{video.thumbnail.hqDefault}}"/>
-			<div class="zoom-icon" ng-click='play(video)' id='{{video.id}}'>
-				<img src="img/play_overlay.png" class='icon_overlay'></div>
+            <ul class="toolbar">
+              <li><a class="play"></a></li>
+              <li><a class="add" ng-click='addplaylist(video)'></a></li>
+           </ul>
+			<img ng-src="{{video.thumbnail.hqDefault}}" ng-click='play(video)'/>
 			<div class='thumb_caption'>{{video.title}}</div>
 			<!-- <button class='btn' ng-click='play(video.id)'>Play</button> -->
 		</div>
@@ -41,24 +36,31 @@
 	</div>
 	<div class='span2'>
 		<div class='row'>
-			<div class='span2'>
-				Play button here
+			<div class='control-group'>
+				<button class='btn' ng-click='play()'>Play</button>
 			</div>
 		</div>
 		<div class='row'>
-			<div class='span2'>
-				next button here
+			<div class='control-group'>
+				<button class='btn' ng-click='stop()'>Stop</button>
 			</div>
 		</div>
 		<div class='row'>
-			<div class='span2'>
-				prev button here
+			<div class='control-group'>
+				<button class='btn' ng-click='next()'>Next</button>
 			</div>
+		</div>
 		<div class='row'>
-			<div class='span2'>
-				<div ng-repeat='song in songs'>
-					<img ng-src='{{song.thumbnail.small}}'>
+			<div class='control-group'>
+				<button class='btn' ng-click='previous()'>Prev</button>
+			</div>
+        <!--playlist block-->
+		<div class='row'>
+            <div class='span2'> 
+				<div ng-repeat='song in playlist' class='thumb' ng-click='fast_play(song.id)'>
+                    <img ng-src="{{song.thumbnail.sqDefault}}"/>
 					<div>{{song.title}}</div>
+					<div>{{song.id == playing}}</div>
 				</div>
 			</div>
 		</div>

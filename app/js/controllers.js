@@ -21,13 +21,46 @@ var handleResponse = function(data){
 }
 
 angular.module('myApp.controllers', ['ui.autocomplete']).
-  controller('MyCtrl1', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
-    
-    $scope.songs = [];
+  controller('MyCtrl1', ['$scope', '$http', '$timeout', 'socket', function($scope, $http, $timeout, socket) {       
+    $scope.videos = [];    
     $scope.songsIdMapping = {};
     $scope.currentSong = 0;
     $scope.status = 'Not playing'; 
     $scope.currentSongName = "";   
+    $scope.songs = [];
+    $scope.playing = '';
+    $scope.playlist = [];
+    
+    //get the initial playlist
+    socket.emit('addsong', null)
+
+    //actual search function
+    $scope.search = function(){
+        if($scope.searchquery){
+          $.ajax({
+            type: "GET",
+            url: 'http://gdata.youtube.com/feeds/api/videos?q=' + encodeURIComponent($scope.searchquery) + '&format=5&max-results=18&v=2&alt=jsonc',
+            dataType: "jsonp",
+            success: function (responseData, textStatus, XMLHttpRequest) {
+                if (responseData.data.items) {
+                    // var videos = responseData.data.items;
+                    // playlistArr = [];
+                    // playlistArr.push(videos);
+                    // updateVideoDisplay(videos);
+                    // pendingDoneWorking = true;
+                    console.log('search result '+responseData.data.items.length);
+                    $scope.videos = responseData.data.items;
+                    $scope.$digest();
+                } else {
+                  console.log('no result');
+                    // updateSuggestedKeyword('No results for "' + keyword + '"');
+                    // doneWorking();
+                }
+            }
+          });
+        }
+    }
+
   	$scope.play = function(video){
   		// var id = extract_video_id(link);
       console.log("playing video id: "+video.id);
@@ -36,12 +69,59 @@ angular.module('myApp.controllers', ['ui.autocomplete']).
         type: 'GET',
         success: function(){
           $scope.status = 'Playing';
-          $scope.currentSongName = video.title;
-          $scope.songs.push(video);
           $scope.songsIdMapping[video.id] = video;
         }
       });
-  	}
+  	}    
+
+    $scope.play = function(video){
+        socket.emit('play', video);
+    }
+
+    $scope.stop = function(){
+      $http.get('http://192.168.0.21:8080/stop')
+        .success(function(data, status, headers, config){
+          $scope.status = 'stopped';
+        }).error(function(){
+          $scope.status = 'error';
+        });
+    }
+
+    $scope.next = function(){
+      $http.get('http://192.168.0.21:8080/next')
+        .success(function(data, status, headers, config){
+          $scope.status = 'nexted';
+        }).error(function(){
+          $scope.status = 'error';
+        });
+    } 
+
+    $scope.previous = function(){
+      $http.get('http://192.168.0.21:8080/prev')
+        .success(function(data, status, headers, config){
+          $scope.status = 'preved';
+        }).error(function(){
+          $scope.status = 'error';
+        });
+    }    
+
+    $scope.addplaylist = function (video) {
+        socket.emit('addsong', video);
+    }
+
+    socket.on('songs', function(songs){
+        $scope.playlist = songs;
+    })
+
+    $scope.fast_play = function(video_id){
+      $.ajax({
+        url: 'http://192.168.0.21:8080/play/'+video_id,
+        type: 'GET',
+        success: function(){
+          $scope.status = 'Playing';
+        }
+      });
+    }
 
     $scope.myOption = {
       options: {
@@ -69,46 +149,6 @@ angular.module('myApp.controllers', ['ui.autocomplete']).
         });
       }
     }
-  }; 
-
-    $scope.stop = function(){
-      $http.get('http://192.168.0.21:8080/stop')
-        .success(function(data, status, headers, config){
-          $scope.status = 'stopped';
-        }).error(function(){
-          $scope.status = 'error';
-        });
-    }
-
-    $scope.next = function(){
-      $scope.currentSong += 1;
-      $scope.play($scope.songs[$scope.currentSong].id);
-    } 
-
-    $scope.previous = function(){
-      $scope.currentSong -= 1;
-      $scope.play($scope.songs[$scope.currentSong].id);
-    }    
-
-    $scope.canPrevious = function(){
-      return $scope.currentSong>0;
-    }
-
-    $scope.canNext = function(){
-      return $scope.currentSong<$scope.songs.length;
-    }
-      
-    // $(function(){
-    //   $('#textSearchQuery').autocomplete({
-    //     source: function(request, response){
-           
-    //       });
-    //     },
-    //     minLength: 2
-    //   });
-    // });    
-
-  }])
-  .controller('MyCtrl2', [function() {
+  };
 
   }]);

@@ -49,6 +49,7 @@ directive('appVersion', ['version', function(version) {
                     success: function(response){
                         if(response.playlist.length>0){
                             scope.songs = [];
+                            scope.playing = response.playing;
                         }
                         //check if current playlist is the same in the server
                         //if yes, then ignore
